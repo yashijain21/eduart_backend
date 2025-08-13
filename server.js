@@ -28,7 +28,7 @@ app.use('/api/Faculty', FacultyRoutes);
 app.use('/api/Student', StudentRoutes);
 
 // Setup static folder to serve uploaded images
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/api/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Configure multer storage
 const storage = multer.diskStorage({
@@ -46,12 +46,13 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // Upload image endpoint
-app.post('/api/upload-image', upload.single('image'), (req, res) => {
+app.post('/api/uploads', upload.single('image'), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: 'No file uploaded' });
   }
   // Return the public URL of the uploaded image
-  const fileUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+  const fileUrl = `${req.protocol}://${req.get('host')}/api/uploads/${req.file.filename}`;
+
   res.json({ path: fileUrl });
 });
 
