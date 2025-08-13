@@ -4,8 +4,9 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const multer = require("multer");
-const path = require("path");
 
+const cloudinary = require("cloudinary").v2;
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
 // Routes
 const registrationRoutes = require("./routes/registration_routes");
 const courseRoutes = require("./routes/Courses_routes");
@@ -32,19 +33,23 @@ app.use("/api/Faculty", FacultyRoutes);
 app.use("/api/Student", StudentRoutes);
 app.use("/api/registrations", registrationRoutes);
 
-// Serve static uploads
-app.use("/api/uploads", express.static(path.join(__dirname, "uploads")));
 
-// Multer storage configuration
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/");
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix =
-      Date.now() + "-" + Math.round(Math.random() * 1e9);
-    const ext = path.extname(file.originalname);
-    cb(null, file.fieldname + "-" + uniqueSuffix + ext);
+
+
+
+// Cloudinary config
+cloudinary.config({
+  cloud_name: "dfg7wekwd", // Your Cloudinary cloud name
+  api_key: "688956946867593", // Your API key
+  api_secret: "Xrbja7I2DBk331fXNR7CrvlqSjI", // Your API secret
+});
+
+// Cloudinary storage setup
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "eduart_uploads", // Folder in Cloudinary
+    allowed_formats: ["jpg", "jpeg", "png", "webp"], // Allowed file types
   },
 });
 
@@ -55,10 +60,9 @@ app.post("/api/uploads", upload.single("image"), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: "No file uploaded" });
   }
-
-  const fileUrl = `${req.protocol}://${req.get("host")}/api/uploads/${req.file.filename}`;
-  res.json({ path: fileUrl });
+  res.json({ path: req.file.path }); // Cloudinary returns the public URL here
 });
+
 
 // Start server
 const PORT = process.env.PORT || 5000;
