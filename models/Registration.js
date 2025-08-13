@@ -1,14 +1,17 @@
-// models/Registration.js
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
-const registrationSchema = new mongoose.Schema({
-  name: String,
-  email: String,
-  phone: String,
-  courseId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Course"
-  }
-}, { timestamps: true });
+const registrationSchema = new mongoose.Schema(
+  {
+    name: String,
+    email: String,
+    phone: String,
+    courseId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Course",
+    },
+    fees: Number
+  },
+  { timestamps: true }
+);
 
-export default mongoose.model("Registration", registrationSchema);
+module.exports = mongoose.model("Registration", registrationSchema);
