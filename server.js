@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const multer = require('multer');
 const path = require('path');
-
+import registrationRoutes from "./routes/registration_routes.js";
 const app = express();
 
 // Middleware to parse JSON bodies
@@ -26,7 +26,7 @@ const StudentRoutes = require('./routes/Student_routes');
 app.use('/api/courses', courseRoutes);
 app.use('/api/Faculty', FacultyRoutes);
 app.use('/api/Student', StudentRoutes);
-
+app.use("/api/registrations", registrationRoutes);
 // Setup static folder to serve uploaded images
 app.use('/api/uploads', express.static(path.join(__dirname, 'uploads')));
 
