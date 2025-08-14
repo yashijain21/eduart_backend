@@ -20,5 +20,16 @@ router.post("/", async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
+router.get("/", async (req, res) => {
+  try {
+    const registrations = await Registration.find()
+      .populate("courseId", "title fees")
+      .sort({ createdAt: -1 });
+    res.json(registrations);
+  } catch (err) {
+    res.status(500).json({ error: "Server error: " + err.message });
+  }
+});
+
 
 module.exports = router;
