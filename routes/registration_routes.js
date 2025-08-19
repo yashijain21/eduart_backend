@@ -57,8 +57,8 @@ router.post("/", async (req, res) => {
     res.status(201).json({ message: "Registration successful & email sent!" });
 
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Server error" });
+    console.error("❌ Registration Error:", err);
+    res.status(500).json({ error: err.message, stack: err.stack });
   }
 });
 router.get("/", async (req, res) => {
